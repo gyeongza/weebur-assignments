@@ -47,7 +47,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const skip = Number(searchParams.get('skip') || '0');
-    const limit = Number(searchParams.get('limit') || '30');
+    const limit = Number(searchParams.get('limit') || '20');
 
     const res = await externalApi.get('/products', {
       params: { skip, limit },
