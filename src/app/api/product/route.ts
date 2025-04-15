@@ -1,5 +1,6 @@
 import { externalApi } from '@/app/_lib/axios';
 import { Product, ProductsResponse } from '@/app/(home)/_type';
+import { PRODUCTS_PER_PAGE } from '@/app/(home)/_constants';
 
 export interface ProductRaw {
   id: number;
@@ -46,11 +47,25 @@ export interface Review {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const skip = Number(searchParams.get('skip') || '0');
-    const limit = Number(searchParams.get('limit') || '20');
 
-    const res = await externalApi.get('/products', {
-      params: { skip, limit },
+    const skip = Number(searchParams.get('skip') || '0');
+    const limit = Number(searchParams.get('limit') || PRODUCTS_PER_PAGE);
+    const q = searchParams.get('q')?.trim() || '';
+    const sortBy = searchParams.get('sortBy')?.trim();
+    const order = searchParams.get('order')?.trim();
+
+    const isSearch = q.length > 0;
+
+    const endpoint = isSearch ? '/products/search' : '/products';
+
+    const res = await externalApi.get(endpoint, {
+      params: {
+        q: isSearch ? q : undefined,
+        skip,
+        limit,
+        ...(sortBy && { sortBy }),
+        ...(order && { order }),
+      },
     });
 
     const formattedProducts: Product[] = res.data.products.map((product: ProductRaw) => ({
@@ -59,18 +74,19 @@ export async function GET(request: Request) {
       description: product.description,
       thumbnail: product.thumbnail,
       rating: product.rating,
-      reviews: product.reviews.length,
+      reviews: product.reviews?.length ?? 0,
     }));
 
     const response: ProductsResponse = {
       products: formattedProducts,
       total: res.data.total,
-      skip: skip,
-      limit: limit,
+      skip,
+      limit,
     };
 
     return Response.json(response);
   } catch (error) {
+    console.error('[API ERROR]', error);
     return Response.json({ error: 'Failed to fetch products' }, { status: 500 });
   }
 }

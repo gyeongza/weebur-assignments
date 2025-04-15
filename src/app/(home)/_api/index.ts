@@ -1,12 +1,19 @@
 import { api } from '@/app/_lib/axios';
-import { ProductsResponse } from '../_type';
+import { ProductFilterParams, ProductsResponse } from '../_type';
 import { PRODUCTS_PER_PAGE } from '../_constants';
+import { setQueryParams } from '@/app/_utils/setQueryParams';
 
 export const HomeApi = {
-  getProducts: async (skip = 0, limit = PRODUCTS_PER_PAGE) => {
-    const response = await api.get<ProductsResponse>('/product', {
-      params: { skip, limit },
+  getProducts: async (params: ProductFilterParams = {}) => {
+    const queryParams = setQueryParams({
+      skip: (params.skip ?? 0).toString(),
+      limit: (params.limit ?? PRODUCTS_PER_PAGE).toString(),
+      q: params.q,
+      sortBy: params.sortBy,
+      order: params.order,
     });
+
+    const response = await api.get<ProductsResponse>(`/product?${queryParams.toString()}`);
     return response.data;
   },
 };

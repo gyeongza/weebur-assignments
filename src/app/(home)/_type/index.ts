@@ -13,3 +13,13 @@ export interface ProductsResponse {
   skip: number;
   limit: number;
 }
+
+export type Order = 'asc' | 'desc';
+
+export interface ProductFilterParams {
+  q?: string;
+  sortBy?: string;
+  order?: Order;
+  skip?: number;
+  limit?: number;
+}
