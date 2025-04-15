@@ -1,13 +1,12 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/app/_components/ui/button';
 import { setQueryParams } from '@/app/_utils/setQueryParams';
 import { Order } from '../_type';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/_components/ui/select';
 import { Input } from '@/app/_components/ui/input';
-import { Label } from '@/app/_components/ui/label';
 
 const sortOptions: Record<string, { sortBy: string; order: Order } | null> = {
   rating_desc: { sortBy: 'rating', order: 'desc' },
