@@ -53,16 +53,14 @@ export async function GET(request: Request) {
       params: { skip, limit },
     });
 
-    const formattedProducts: Product[] = res.data.products.map(
-      (product: ProductRaw) => ({
-        id: product.id,
-        title: product.title,
-        description: product.description,
-        thumbnail: product.thumbnail,
-        rating: product.rating,
-        reviews: product.reviews.length,
-      })
-    );
+    const formattedProducts: Product[] = res.data.products.map((product: ProductRaw) => ({
+      id: product.id,
+      title: product.title,
+      description: product.description,
+      thumbnail: product.thumbnail,
+      rating: product.rating,
+      reviews: product.reviews.length,
+    }));
 
     const response: ProductsResponse = {
       products: formattedProducts,
@@ -73,9 +71,6 @@ export async function GET(request: Request) {
 
     return Response.json(response);
   } catch (error) {
-    return Response.json(
-      { error: 'Failed to fetch products' },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to fetch products' }, { status: 500 });
   }
 }
