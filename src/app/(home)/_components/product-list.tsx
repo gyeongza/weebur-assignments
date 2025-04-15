@@ -5,13 +5,10 @@ import ProductCard from './product-card';
 import ViewButton from './view-button';
 import useViewMode from '../_hooks/useViewMode';
 import ProductListSkeleton from './product-list-skeleton';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { HomeApi } from '../_api';
 import { useInView } from 'react-intersection-observer';
-import { PRODUCTS_PER_PAGE } from '../_constants';
 import { useSearchParams } from 'next/navigation';
 import ProductFilterForm from './filter-form';
-import { Order, ProductFilterParams } from '../_type';
+import { useInfiniteProducts } from '../_hooks/query/useInfiniteProducts';
 
 export type ViewMode = 'list' | 'grid';
 
@@ -30,35 +27,7 @@ export default function ProductList() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['products', q, sortBy, order],
-    queryFn: ({ pageParam = 0 }) => {
-      const params: ProductFilterParams = {
-        skip: pageParam,
-        limit: PRODUCTS_PER_PAGE,
-      };
-
-      if (q && q.trim() !== '') {
-        params.q = q;
-      }
-
-      if (sortBy) {
-        params.sortBy = sortBy;
-      }
-
-      if (order) {
-        params.order = order as Order;
-      }
-
-      return HomeApi.getProducts(params);
-    },
-    getNextPageParam: (lastPage) => {
-      const nextSkip = lastPage.skip + lastPage.limit;
-      return nextSkip >= lastPage.total ? undefined : nextSkip;
-    },
-    initialPageParam: 0,
-    select: (data) => data.pages.flatMap((page) => page.products),
-  });
+  } = useInfiniteProducts({ q, sortBy, order });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
