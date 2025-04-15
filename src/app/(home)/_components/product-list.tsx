@@ -14,11 +14,11 @@ interface ProductListProps {
 export default function ProductList({ productList }: ProductListProps) {
   const { viewMode, setViewMode } = useViewMode();
 
+  if (!viewMode) return null;
+
   const handleViewModeChange = (viewMode: ViewMode) => {
     setViewMode(viewMode);
   };
-
-  if (!viewMode) return null;
 
   return (
     <div className="flex flex-col gap-4">
