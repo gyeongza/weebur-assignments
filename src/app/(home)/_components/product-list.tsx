@@ -7,8 +7,8 @@ import useViewMode from '../_hooks/useViewMode';
 import ProductListSkeleton from './product-list-skeleton';
 import { useInView } from 'react-intersection-observer';
 import { useSearchParams } from 'next/navigation';
-import ProductFilterForm from './filter-form';
 import { useInfiniteProducts } from '../_hooks/query/useInfiniteProducts';
+import ProductFilterForm from './product-filter-form';
 
 export type ViewMode = 'list' | 'grid';
 
