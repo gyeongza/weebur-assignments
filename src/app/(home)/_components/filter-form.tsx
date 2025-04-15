@@ -4,8 +4,9 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Button } from '@/app/_components/ui/button';
 import { setQueryParams } from '@/app/_utils/setQueryParams';
+import { Order } from '../_type';
 
-const sortOptions: Record<string, { sortBy: string; order: 'asc' | 'desc' } | null> = {
+const sortOptions: Record<string, { sortBy: string; order: Order } | null> = {
   rating_desc: { sortBy: 'rating', order: 'desc' },
   rating_asc: { sortBy: 'rating', order: 'asc' },
   none: null,
