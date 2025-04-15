@@ -35,7 +35,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: ProductCardP
   return (
     <div className="flex items-center overflow-hidden rounded-lg border">
       <div className="relative h-32 w-32 flex-shrink-0">
-        <Image src={product.thumbnail} alt={product.title} fill className="object-cover" />
+        <Image src={product.thumbnail} alt={product.title} width={128} height={128} className="object-cover" />
       </div>
       <div className="flex flex-col justify-between gap-2 p-4">
         <h3 className="truncate text-lg font-medium">{product.title}</h3>
