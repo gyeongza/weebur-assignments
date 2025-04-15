@@ -1,7 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Order, ProductFilterParams } from '../../_type';
 import { PRODUCTS_PER_PAGE } from '../../_constants';
-import { HomeApi } from '../../_api';
+import HomeApi, { productKeys } from '../../_api';
 
 interface UseInfiniteProductsProps {
   q: string;
@@ -11,7 +11,7 @@ interface UseInfiniteProductsProps {
 
 export const useInfiniteProducts = ({ q, sortBy, order }: UseInfiniteProductsProps) => {
   return useInfiniteQuery({
-    queryKey: ['products', q, sortBy, order],
+    queryKey: productKeys.listFiltered({ q, sortBy, order: order as Order }),
     queryFn: ({ pageParam = 0 }) => {
       const params: ProductFilterParams = {
         skip: pageParam,
