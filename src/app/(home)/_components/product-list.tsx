@@ -43,8 +43,10 @@ export default function ProductList() {
 
   return (
     <div className="flex flex-col gap-4">
-      <ProductFilterForm />
-      <ViewButton viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <ProductFilterForm />
+        <ViewButton viewMode={viewMode} onViewModeChange={handleViewModeChange} />
+      </div>
       <div
         className={viewMode === 'grid' ? 'grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4' : 'flex flex-col gap-4'}
       >
