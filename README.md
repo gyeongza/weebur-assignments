@@ -79,13 +79,20 @@ src/
 - 라우팅 그룹 (home)을 만들어 상품 리스트 페이지를 구현했습니다.
   - [Next.js 공식문서](https://nextjs.org/docs/14/getting-started/project-structure#route-groups-and-private-folders)의 Route Group, Private Folders를 참고하여 client component는 `_api`, `_component`와 같이 구성하였습니다.
   - 또한 각 페이지에서만 사용되는 컴포넌트나 훅들은 관심사 분리를 위해 페이지 내에 폴더에 묶었습니다.
+  - 따라서 Private Folders를 통해 서버 컴포넌트, 클라이언트 컴포넌트를 명확히 분리할 수 있었습니다.
 
 ### 필요한 항목만 포함하도록 상품 API 따로 구현
 
 - `/products`로 불러오는 상품리스트에는 클라이언트에서 필요없는 데이터들이 들어있어서 해당 데이터는 Route Handler를 통해 서버에서 처리하고 클라이언트에는 필요한 데이터만 받아오도록 분리했습니다.
+
   - app 폴더 내부의 api는 서버, (home) 폴더 내부의 \_api는 클라이언트 api입니다.
   - 클라이언트에서는 꼭 필요한 필드만 전달받도록 가공하여 네트워크 사용량을 줄이고, Type 추론을 명확하게 하기 위해 서버 사이드에서 미리 가공했습니다.
     - 클라이언트 로직은 단순해지고, 타입 안정성도 확보할 수 있었습니다.
+
+- 상품 리스트, 검색 api 분리에 대한 고민
+  - 검색의 경우 `/products/search`의 경로로 요청해야합니다.
+  - 클라이언트에서도 두개의 api로 분리하려고 했지만 query params에 정렬, 페이지네이션 등은 중복되었기 때문에 하나로 통합했습니다.
+  - 백엔드에서는 검색어 여부에 따라 각각 다른 라우트로 요청하고 나머지는 같은 params를 사용하도록 했습니다.
 
 ### View 방식 결정
 
