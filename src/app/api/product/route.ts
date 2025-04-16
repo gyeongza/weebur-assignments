@@ -1,6 +1,7 @@
 import { externalApi } from '@/app/_lib/axios';
 import { Product, ProductsResponse } from '@/app/(home)/_type';
 import { PRODUCTS_PER_PAGE } from '@/app/(home)/_constants';
+import { AxiosError } from 'axios';
 
 export interface ProductRaw {
   id: number;
@@ -86,7 +87,38 @@ export async function GET(request: Request) {
 
     return Response.json(response);
   } catch (error) {
-    console.error('[API ERROR]', error);
-    return Response.json({ error: 'Failed to fetch products' }, { status: 500 });
+    if (error instanceof AxiosError) {
+      if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data?.message || '외부 API 호출 중 오류가 발생했습니다.';
+
+        return Response.json(
+          {
+            error: message,
+            statusCode: status,
+            endpoint: error.config?.url,
+          },
+          { status: status },
+        );
+      } else if (error.request) {
+        return Response.json(
+          {
+            error: '네트워크 오류가 발생했습니다.',
+            statusCode: 503,
+            details: error.message,
+          },
+          { status: 503 },
+        );
+      }
+    }
+
+    return Response.json(
+      {
+        error: '상품 정보를 가져오는 중 오류가 발생했습니다.',
+        statusCode: 500,
+        details: error instanceof Error ? error.message : String(error),
+      },
+      { status: 500 },
+    );
   }
 }

@@ -9,6 +9,7 @@ import { useInView } from 'react-intersection-observer';
 import { useSearchParams } from 'next/navigation';
 import { useInfiniteProducts } from '../_hooks/query/useInfiniteProducts';
 import ProductFilterForm from './product-filter-form';
+import { Button } from '@/app/_components/ui/button';
 
 export type ViewMode = 'list' | 'grid';
 
@@ -24,9 +25,11 @@ export default function ProductList() {
   const {
     data: productList,
     isLoading,
-    fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isError,
+    fetchNextPage,
+    refetch,
   } = useInfiniteProducts({ q, sortBy, order });
 
   useEffect(() => {
@@ -40,6 +43,21 @@ export default function ProductList() {
   };
 
   if (!viewMode) return null;
+
+  if (isError) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center gap-4">
+        <p>상품을 불러오지 못했어요</p>
+        <Button
+          onClick={() => {
+            refetch();
+          }}
+        >
+          다시시도
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
